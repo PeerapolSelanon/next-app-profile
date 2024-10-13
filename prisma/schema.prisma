@@ -8,63 +8,63 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String?
-  email     String   @unique
-  password  String @db.VarChar(256)
-  role_id Int?
-  product Product[]
-  order Order[]
+  id          Int           @id @default(autoincrement())
+  name        String?
+  email       String        @unique
+  password    String        @db.VarChar(256)
+  role_id     Int?
+  product     Product[]
+  order       Order[]
   transaction Transaction[]
-  address Address[]
-  payment Payment[]
-  created_at DateTime @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
+  address     Address[]
+  payment     Payment[]
+  created_at  DateTime      @default(now())
+  updated_at  DateTime?     @updatedAt
+  deleted_at  DateTime?
 }
 
 model Role {
-  id  Int @id @default(autoincrement())
-  role_name String
-  desciption String
+  id            Int      @id @default(autoincrement())
+  role_name     String
+  description   String // แก้ไขคำว่า "desciption" เป็น "description"
   permission_id Int
-  edit_by Int
+  edit_by       Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Permission {
+  id         Int      @id @default(autoincrement())
+  pages      String   @db.VarChar(256)
+  edit_by    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model Permission{
-  id Int @id @default(autoincrement())
-  pages String @db.VarChar(256)
-  edit_by Int
+model Product {
+  id         Int      @id @default(autoincrement())
+  name       String
+  stock      Stock[]
+  editor     User     @relation(fields: [edit_by], references: [id]) // เพิ่มความสัมพันธ์ระหว่าง Product กับ User โดยใช้ฟิลด์ "edit_by"
+  edit_by    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-model Product{
-  id Int @id @default(autoincrement())
-  name String
-  stock Stock[]
-  editor User @relation(fields: [edit_by], references: [id])
-  edit_by Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model Stock{
-  id Int @id @default(autoincrement())
+model Stock {
+  id             Int      @id @default(autoincrement())
   original_price Decimal
-  sell_price Decimal
-  product_id Int
-  product Product @relation(fields: [product_id], references: [id])
-  size Size
-  order Order[]
-  edit_by Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  sell_price     Decimal
+  product_id     Int
+  product        Product  @relation(fields: [product_id], references: [id])
+  size           Size
+  order          Order[]
+  edit_by        Int
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 }
 
-enum Size{
+enum Size {
   SS
   S
   M
@@ -79,72 +79,74 @@ enum Size{
   A5
   A6
 }
-model Order{
-  id Int @id @default(autoincrement())
-  stock Stock @relation(fields: [stock_id],references: [id])
-  stock_id Int
-  amount Int
-  owner User @relation(fields: [owner_id], references: [id])
-  owner_id Int
-  status OrderStatus
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  stock      Stock       @relation(fields: [stock_id], references: [id])
+  stock_id   Int
+  amount     Int
+  owner      User        @relation(fields: [owner_id], references: [id])
+  owner_id   Int
+  status     OrderStatus
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
 }
 
-enum OrderStatus{
+enum OrderStatus {
   IN_CART
   PAID
 }
-model Transaction{
-  id Int @id @default(autoincrement())
-  order String @db.VarChar(256)
+
+model Transaction {
+  id          Int               @id @default(autoincrement())
+  order       String            @db.VarChar(256)
   total_price Decimal
-  off_price Decimal
-  paid_price Decimal
-  address_id Int
-  address Address @relation(fields: [address_id],references: [id])
-  status TransactionStatus
-  payment Payment?
-  owner_id Int
-  owner User @relation(fields: [owner_id],references: [id])
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  off_price   Decimal
+  paid_price  Decimal
+  address_id  Int
+  address     Address           @relation(fields: [address_id], references: [id])
+  status      TransactionStatus
+  payment     Payment?
+  owner_id    Int
+  owner       User              @relation(fields: [owner_id], references: [id])
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @updatedAt
 }
 
-model Address{
-  id Int @id @default(autoincrement())
-  user_id Int
-  user User @relation(fields: [user_id],references: [id])
-  firstname String
-  lastname String
-  postcode String
-  province String
-  district String
+model Address {
+  id           Int           @id @default(autoincrement())
+  user_id      Int
+  user         User          @relation(fields: [user_id], references: [id])
+  firstname    String
+  lastname     String
+  postcode     String
+  province     String
+  district     String
   sub_district String
-  address String
-  is_main Boolean
-  transaction Transaction[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  address      String
+  is_main      Boolean
+  transaction  Transaction[]
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
 }
 
-enum TransactionStatus{
+enum TransactionStatus {
   PAID
   WAITING_TO_CONFIRM
   ERROR
   PENDING
 }
 
-model Payment{
-  id Int @id @default(autoincrement())
-  transaction_id Int @unique
-  transaction Transaction @relation(fields: [transaction_id], references: [id])
-  payment_ref1 String
-  payment_ref2 String
-  approve_image String
-  is_confirm Boolean
-  owner_id Int
-  owner User @relation(fields: [owner_id],references: [id])
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model Payment {
+  id             Int         @id @default(autoincrement())
+  transaction_id Int         @unique
+  transaction    Transaction @relation(fields: [transaction_id], references: [id])
+  payment_ref1   String
+  payment_ref2   String
+  approve_image  String
+  is_confirm     Boolean
+  owner_id       Int
+  owner          User        @relation(fields: [owner_id], references: [id])
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
 }
