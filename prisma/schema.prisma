@@ -12,6 +12,7 @@ model User {
   name        String?
   email       String        @unique
   password    String        @db.VarChar(256)
+  role        Role?         @relation(fields: [role_id], references: [id])
   role_id     Int?
   product     Product[]
   order       Order[]
@@ -24,18 +25,21 @@ model User {
 }
 
 model Role {
-  id            Int      @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   role_name     String
-  description   String // แก้ไขคำว่า "desciption" เป็น "description"
+  description   String
+  permission    Permission @relation(fields: [permission_id], references: [id])
   permission_id Int
+  users         User[]
   edit_by       Int
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
 }
 
 model Permission {
   id         Int      @id @default(autoincrement())
   pages      String   @db.VarChar(256)
+  roles      Role[]
   edit_by    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -45,7 +49,7 @@ model Product {
   id         Int      @id @default(autoincrement())
   name       String
   stock      Stock[]
-  editor     User     @relation(fields: [edit_by], references: [id]) // เพิ่มความสัมพันธ์ระหว่าง Product กับ User โดยใช้ฟิลด์ "edit_by"
+  editor     User     @relation(fields: [edit_by], references: [id])
   edit_by    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
