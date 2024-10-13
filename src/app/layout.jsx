@@ -1,4 +1,5 @@
 import CustomSessionProvider from "@/components/SessionProvider";
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -24,7 +25,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CustomSessionProvider>{children}</CustomSessionProvider>
+        <AntdRegistry>
+          <CustomSessionProvider>{children}</CustomSessionProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

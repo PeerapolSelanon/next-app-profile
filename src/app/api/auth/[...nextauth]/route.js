@@ -1,28 +1,55 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaClient } from '@prisma/client';
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import prisma from '@/lib/prisma';
 import { compare } from 'bcryptjs';
 
-const prisma = new PrismaClient();
-
-const handler = NextAuth({
+export const authOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: 'Email', type: 'text', placeholder: 'Enter your email' },
+        password: { label: 'Password', type: 'password', placeholder: 'Enter your password' },
       },
       async authorize(credentials) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials?.email },
-        });
-
-        if (user && (await compare(credentials?.password, user.password))) {
-          return user;
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Please provide both email and password');
         }
 
-        return null;
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          throw new Error('No user found with this email');
+        }
+
+        const isPasswordValid = await compare(credentials.password, user.password);
+
+        if (!isPasswordValid) {
+          throw new Error('Invalid password');
+        }
+
+        // Fetch role and permission separately
+        let role = null;
+        let permissions = null;
+        if (user.role_id) {
+          role = await prisma.role.findUnique({
+            where: { id: user.role_id },
+            include: { permission: true }
+          });
+          permissions = role?.permission?.pages;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: role?.role_name,
+          permissions: permissions,
+        };
       },
     }),
   ],
@@ -30,20 +57,37 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.role = user.role;
+        token.permissions = user.permissions;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.id = token.id;
+        session.user = {
+          id: token.id,
+          email: token.email,
+          name: token.name,
+          role: token.role,
+          permissions: token.permissions,
+        };
       }
       return session;
     },
   },
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error',
+  },
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
