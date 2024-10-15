@@ -187,7 +187,7 @@ const Layout = ({ children }) => {
               gap: isMobile ? "12px" : "24px",
             }}
           >
-            <div style={{ display: "flex", gap: "12px" }}>
+            <div style={{ display: "flex", gap: "24px" }}>
               <Badge count={999} style={{ backgroundColor: "#52c41a" }}>
                 <Avatar
                   shape="square"
