@@ -43,15 +43,16 @@ export const authOptions = {
           throw new Error("Invalid password");
         }
 
-        // Fetch role and permission separately
+        // Fetch role and permissions separately
         let role = null;
-        let permissions = null;
+        let permissions = [];
         if (user.role_id) {
           role = await prisma.role.findUnique({
             where: { id: user.role_id },
-            include: { permission: true },
+            include: { permissions: { include: { permission: true } } },
           });
-          permissions = role?.permission?.pages;
+          permissions =
+            role?.permissions.map((rp) => rp.permission.pages) || [];
         }
 
         return {
