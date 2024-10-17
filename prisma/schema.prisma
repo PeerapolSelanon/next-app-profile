@@ -25,32 +25,22 @@ model User {
 }
 
 model Role {
-  id          Int              @id @default(autoincrement())
-  role_name   String
-  description String
-  permissions RolePermission[]
+  id  Int @id @default(autoincrement())
   users       User[]
-  edit_by     Int
-  created_at  DateTime         @default(now())
-  updated_at  DateTime         @updatedAt
-}
-
-model Permission {
-  id         Int              @id @default(autoincrement())
-  pages      String           @db.VarChar(256)
-  roles      RolePermission[]
-  edit_by    Int
-  created_at DateTime         @default(now())
-  updated_at DateTime         @updatedAt
-}
-
-model RolePermission {
-  role          Role       @relation(fields: [role_id], references: [id])
-  role_id       Int
-  permission    Permission @relation(fields: [permission_id], references: [id])
+  role_name String
+  desciption String
   permission_id Int
+  edit_by Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
 
-  @@id([role_id, permission_id])
+model Permission{
+  id Int @id @default(autoincrement())
+  pages String @db.VarChar(256)
+  edit_by Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Product {
