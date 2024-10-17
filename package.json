@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migration:create": "prisma migrate dev --create-only",
+    "migrate" : "prisma migrate dev",
+    "migrate:prd" : "prisma migrate deploy",
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
