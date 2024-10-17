@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { canAccessPath } from "./utils/authUtils";
 
 export async function middleware(req) {
-  const path = req.nextUrl.pathname;
+  // ข้ามการตรวจสอบสำหรับหน้า signin
+  if (req.nextUrl.pathname === "/auth/signin") {
+    return NextResponse.next();
+  }
 
   // ดึง token จาก request
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -19,14 +21,6 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/auth/unauthorized", req.url));
   }
 
-  // ตรวจสอบสิทธิ์การเข้าถึง
-  const hasAccess = canAccessPath(token, path);
-  console.log("Access granted:", hasAccess);
-
-  if (!hasAccess) {
-    return NextResponse.redirect(new URL("/auth/unauthorized", req.url));
-  }
-
   // ถ้าผ่านการตรวจสอบทั้งหมด ให้ดำเนินการต่อไป
   return NextResponse.next();
 }
@@ -36,12 +30,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - auth (auth pages)
-     * - api/auth (auth API routes)
+     * - api/auth (API routes for authentication)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - public folder
      */
-    "/((?!auth|api/auth|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|public).*)",
   ],
 };

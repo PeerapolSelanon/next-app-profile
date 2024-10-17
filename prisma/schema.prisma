@@ -25,20 +25,20 @@ model User {
 }
 
 model Role {
-  id  Int @id @default(autoincrement())
-  users       User[]
-  role_name String
-  desciption String
+  id            Int      @id @default(autoincrement())
+  users         User[]
+  role_name     String
+  desciption    String
   permission_id Int
-  edit_by Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  edit_by       Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 }
 
-model Permission{
-  id Int @id @default(autoincrement())
-  pages String @db.VarChar(256)
-  edit_by Int
+model Permission {
+  id         Int      @id @default(autoincrement())
+  pages      String   @db.VarChar(256)
+  edit_by    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }

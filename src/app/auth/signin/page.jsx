@@ -38,7 +38,7 @@ export default function SignIn() {
       } else {
         message.success("เข้าสู่ระบบสำเร็จ");
         // รอให้ session อัพเดทก่อนที่จะ redirect
-        router.push("/");
+        router.push("/dashboard");
       }
     } catch (error) {
       message.error("เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
@@ -52,8 +52,6 @@ export default function SignIn() {
     if (status === "authenticated") {
       if (session?.user?.role === "ADMIN") {
         router.push("/dashboard");
-      } else {
-        router.push("/home");
       }
     }
   }, [session, status, router]);

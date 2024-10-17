@@ -28,6 +28,7 @@ export const authOptions = {
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
+          include: { role: true },
         });
 
         if (!user) {
@@ -43,23 +44,20 @@ export const authOptions = {
           throw new Error("Invalid password");
         }
 
-        // Fetch role and permissions separately
-        let role = null;
+        // Fetch permissions
         let permissions = [];
-        if (user.role_id) {
-          role = await prisma.role.findUnique({
-            where: { id: user.role_id },
-            include: { permissions: { include: { permission: true } } },
+        if (user.role) {
+          const permission = await prisma.permission.findUnique({
+            where: { id: user.role.permission_id },
           });
-          permissions =
-            role?.permissions.map((rp) => rp.permission.pages) || [];
+          permissions = permission ? [permission.pages] : [];
         }
 
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: role?.role_name,
+          role: user.role?.role_name,
           permissions: permissions,
         };
       },
