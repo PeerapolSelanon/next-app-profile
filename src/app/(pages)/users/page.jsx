@@ -10,15 +10,18 @@ import {
   Form,
   Select,
   message,
+  Typography,
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   UserAddOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 
 const { Search } = Input;
 const { Option } = Select;
+const { Title } = Typography;
 
 const UsersPage = () => {
   const [users, setUsers] = useState([
@@ -131,7 +134,10 @@ const UsersPage = () => {
 
   return (
     <div style={{ padding: "24px" }}>
-      <h1 style={{ marginBottom: "16px" }}>Manage Users</h1>
+      <Title level={3} style={{ marginBottom: "24px" }}>
+        <TeamOutlined style={{ marginRight: "12px" }} />
+        Users Management
+      </Title>
       <div
         style={{
           marginBottom: "16px",

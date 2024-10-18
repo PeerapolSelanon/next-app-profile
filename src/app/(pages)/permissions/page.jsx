@@ -10,7 +10,6 @@ import {
   Input,
   message,
   Typography,
-  Card,
   Tag,
   Tooltip,
 } from "antd";
@@ -131,20 +130,28 @@ const PermissionsPage = () => {
   };
 
   return (
-    <Card style={{ margin: "24px" }}>
-      <Title level={4} style={{ marginBottom: "24px" }}>
-        <LockOutlined style={{ marginRight: "12px" }} />
-        Permissions Management
-      </Title>
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={() => setIsModalVisible(true)}
-        style={{ marginBottom: "24px" }}
-        size="middle"
+    <div style={{ padding: "24px" }}>
+      <div
+        style={{
+          marginBottom: "16px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
-        Add New Permission
-      </Button>
+        <Title level={3} style={{ marginBottom: "24px" }}>
+          <LockOutlined style={{ marginRight: "12px" }} />
+          Permissions Management
+        </Title>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsModalVisible(true)}
+          style={{ marginBottom: "24px" }}
+          size="middle"
+        >
+          Add New Permission
+        </Button>
+      </div>
       <Table
         columns={columns}
         dataSource={permissions}
@@ -156,7 +163,7 @@ const PermissionsPage = () => {
 
       <Modal
         title={editingPermissionId ? "Edit Permission" : "Add New Permission"}
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={() => {
           setIsModalVisible(false);
@@ -187,7 +194,7 @@ const PermissionsPage = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </Card>
+    </div>
   );
 };
 
