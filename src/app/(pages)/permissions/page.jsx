@@ -131,27 +131,19 @@ const PermissionsPage = () => {
 
   return (
     <div style={{ padding: "24px" }}>
-      <div
-        style={{
-          marginBottom: "16px",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
+      <Title level={3} style={{ marginBottom: "24px" }}>
+        <LockOutlined style={{ marginRight: "12px" }} />
+        Permissions Management
+      </Title>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => setIsModalVisible(true)}
+        style={{ marginBottom: "24px" }}
+        size="middle"
       >
-        <Title level={3} style={{ marginBottom: "24px" }}>
-          <LockOutlined style={{ marginRight: "12px" }} />
-          Permissions Management
-        </Title>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setIsModalVisible(true)}
-          style={{ marginBottom: "24px" }}
-          size="middle"
-        >
-          Add New Permission
-        </Button>
-      </div>
+        Add New Permission
+      </Button>
       <Table
         columns={columns}
         dataSource={permissions}

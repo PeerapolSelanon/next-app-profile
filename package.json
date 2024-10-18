@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "migration:create": "prisma migrate dev --create-only",
-    "migrate" : "prisma migrate dev",
-    "migrate:prd" : "prisma migrate deploy",
+    "migrate": "prisma migrate dev",
+    "migrate:prd": "prisma migrate deploy",
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "echarts": "^5.5.1",
+    "echarts-for-react": "^3.0.2",
     "next": "14.2.15",
     "next-auth": "^4.24.8",
     "nodemailer": "^6.9.15",

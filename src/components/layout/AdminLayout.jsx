@@ -18,7 +18,7 @@ const AdminLayout = ({ children }) => {
   }, []);
 
   if (!isMounted) {
-    return null; // หรือแสดง loading indicator
+    return null;
   }
 
   return (

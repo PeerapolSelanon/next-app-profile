@@ -6,18 +6,22 @@ import {
   UserOutlined,
   TeamOutlined,
   LockOutlined,
+  PlusOutlined,
+  UnorderedListOutlined,
+  TagsOutlined,
+  InboxOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 
 export const sidebarMenu = [
   {
     key: "1",
-    label: "Dashboard",
+    label: <Link href="/dashboard">Dashboard</Link>,
     icon: <HomeOutlined />,
   },
   {
     key: "2",
-    label: "Sales",
+    label: <Link href="/sales">Sales</Link>,
     icon: <ShoppingCartOutlined />,
   },
   {
@@ -27,18 +31,34 @@ export const sidebarMenu = [
     children: [
       {
         key: "3-1",
-        label: "Show All",
+        label: <Link href="/products">All Products</Link>,
+        icon: <UnorderedListOutlined />,
+      },
+      {
+        key: "3-2",
+        label: <Link href="/products/add">Add Product</Link>,
+        icon: <PlusOutlined />,
+      },
+      {
+        key: "3-3",
+        label: <Link href="/products/categories">Categories</Link>,
+        icon: <TagsOutlined />,
+      },
+      {
+        key: "3-4",
+        label: <Link href="/products/inventory">Inventory</Link>,
+        icon: <InboxOutlined />,
       },
     ],
   },
   {
     key: "4",
-    label: "Reports",
+    label: <Link href="/reports">Reports</Link>,
     icon: <BarChartOutlined />,
   },
   {
     key: "5",
-    label: "Customers",
+    label: <Link href="/customers">Customers</Link>,
     icon: <UserOutlined />,
   },
   {
